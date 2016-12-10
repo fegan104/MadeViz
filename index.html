@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>MadeViz</title>
+    <meta name="description" content="MadeViz description">
+
+    <!-- See https://goo.gl/OOhYW5 -->
+    <link rel="manifest" href="/manifest.json">
+    <!-- Load scripts -->
+    <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <!-- Polymer imports-->
+    <link rel="import" href="/bower_components/polymer/polymer.html">
+    <link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+    <link rel="import" href="/bower_components/google-chart/google-chart.html">
+
+    <style>
+      #names-container {
+        max-width: 20vw;
+      }
+    </style>
+  </head>
+  <body>
+    <template is="dom-bind" id="viz">
+      <!-- Get the data -->
+      <iron-ajax
+        auto
+        url="/data/attivita_2000.geojson"
+        handle-as="json"
+        last-response={{data}}>
+      </iron-ajax>
+      <!-- Pie chart for ratio of Producers to Services -->
+      <google-chart
+        type='pie'
+        options='{"title": "Distribution of days in 2001Q1"}'
+        cols="[[getColumns(data)]]"
+        rows="[[getRows(data)]]">
+      </google-chart>
+      <!-- Display using data bindinig -->
+      <template is="dom-repeat" items="{{data.features}}">
+        <div id="names-container">
+          [[item.properties.nome]]
+        </p>
+        </div>
+      </template>
+    </template>
+
+    <script>
+      var viz = document.querySelector("#viz");
+      viz.getColumns = function(data){
+        // console.log(data);
+        return [
+          {"label":"Business Type","type":"string"},
+          {"label":"Types","type":"number"}];};
+      viz.getRows = function(data){
+        // console.log(data);
+        return [
+          ["Services",
+            data.features.filter(f => (f.properties.prod === "FALSO")).length],
+          ["Productions",
+            data.features.filter(f => (f.properties.prod === "VERO")).length]];
+      };
+    </script>
+  </body>
+</html>

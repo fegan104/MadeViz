@@ -1,0 +1,7 @@
+{
+  "name": "MadeViz",
+  "short_name": "MadeViz",
+  "description": "A vidualizatino for the VE16-Made team&#39;",
+  "start_url": "/",
+  "display": "standalone"
+}

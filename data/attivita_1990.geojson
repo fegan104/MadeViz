@@ -1,0 +1,55 @@
+{
+  "crs":{
+    "properties":{
+      "name":"urn:ogc:def:crs:OGC:1.3:CRS84"
+    },
+    "type":"name"
+  },
+  "features":[
+    {
+      "geometry":{
+        "coordinates":[
+          "12.3625068",
+          "45.4034961"
+        ],
+        "type":"Point"
+      },
+      "properties":{
+        "pkid":"89048",
+        "apertura":"1961",
+        "chiusura":"1990",
+        "nome":"PESCATORI MARISA",
+        "indirizzo":"VIA S.GALLO 142/B",
+        "ateco_1":"47.71.3  P / 47.51.1  S / 47.51.2  S",
+        "ateco_2":"47.71.3  P / 47.51.1  S / 47.51.2  S",
+        "prod":"FALSO",
+        "ind":"",
+        "dip":""
+      },
+      "type":"Feature"
+    },
+    {
+      "geometry":{
+        "coordinates":[
+          "12.1531173",
+          "45.4875477"
+        ],
+        "type":"Point"
+      },
+      "properties":{
+        "pkid":"202875",
+        "apertura":"1987",
+        "chiusura":"1987",
+        "nome":"GRUPPO ANZIANI AUTOGESTITO SACCA FISOLA (CENTRO SOCIALE RICREATI= VO CULTURALE)",
+        "indirizzo":"VIA RIMINI 1",
+        "ateco_1":"56.3  P",
+        "ateco_2":"56.3  P",
+        "prod":"FALSO",
+        "ind":"",
+        "dip":""
+      },
+      "type":"Feature"
+    }
+  ],
+  "type":"FeatureCollection"
+}

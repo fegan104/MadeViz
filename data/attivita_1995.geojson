@@ -1,0 +1,77 @@
+{
+  "crs":{
+    "properties":{
+      "name":"urn:ogc:def:crs:OGC:1.3:CRS84"
+    },
+    "type":"name"
+  },
+  "features":[
+    {
+      "geometry":{
+        "coordinates":[
+          "12.3360939",
+          "45.4416698"
+        ],
+        "type":"Point"
+      },
+      "properties":{
+        "pkid":"51992",
+        "apertura":"1947",
+        "chiusura":"1994",
+        "nome":"CONTIN ALDO",
+        "indirizzo":" CANNAREGIO 4391/3",
+        "ateco_1":"47.78.32 P",
+        "ateco_2":"47.78.32 P",
+        "prod":"FALSO",
+        "ind":"",
+        "dip":""
+      },
+      "type":"Feature"
+    },
+    {
+      "geometry":{
+        "coordinates":[
+          "12.333703",
+          "45.44308909999999"
+        ],
+        "type":"Point"
+      },
+      "properties":{
+        "pkid":"121744",
+        "apertura":"1971",
+        "chiusura":"1995",
+        "nome":"DE TOFFOLI LIDIA VED. BUCCI",
+        "indirizzo":" CANNAREGIO 1522/B",
+        "ateco_1":"14.14 A / 13 S / 14.13.2  D / 47.71.3  D",
+        "ateco_2":"14.14 A / 13 S / 14.13.2  D / 47.71.3  D",
+        "prod":"VERO",
+        "ind":"",
+        "dip":""
+      },
+      "type":"Feature"
+    },
+    {
+      "geometry":{
+        "coordinates":[
+          "12.3365368",
+          "45.4422821"
+        ],
+        "type":"Point"
+      },
+      "properties":{
+        "pkid":"214279",
+        "apertura":"1996",
+        "chiusura":"1993",
+        "nome":"NUOVA ACISA S.R.L.",
+        "indirizzo":" CANNAREGIO 2292 SCALA C ",
+        "ateco_1":"68.1  P / 41 S",
+        "ateco_2":"68.1  P / 41 S",
+        "prod":"FALSO",
+        "ind":"",
+        "dip":""
+      },
+      "type":"Feature"
+    }
+  ],
+  "type":"FeatureCollection"
+}
