@@ -10,11 +10,15 @@
     <!-- See https://goo.gl/OOhYW5 -->
     <link rel="manifest" href="/manifest.json">
     <!-- Load scripts -->
-    <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="/bower_components/webcomponentsjs/webcomponents.js"></script>
     <!-- Polymer imports-->
     <link rel="import" href="/bower_components/polymer/polymer.html">
     <link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
     <link rel="import" href="/bower_components/google-chart/google-chart.html">
+    <link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+    <link rel="import" href="/bower_components/paper-menu/paper-menu.html">
+    <link rel="import" href="/bower_components/paper-listbox/paper-listbox.html">
+    <link rel="import" href="/bower_components/paper-item/paper-item.html">
 
     <style>
       #names-container {
@@ -26,15 +30,27 @@
     <template is="dom-bind" id="viz">
       <!-- Get the data -->
       <iron-ajax
+        id="ajax"
         auto
-        url="/data/attivita_2000.geojson"
+        url="{{getUrl()}}"
         handle-as="json"
         last-response={{data}}>
       </iron-ajax>
+      <!-- Year selector -->
+      <paper-dropdown-menu label="Select a year">
+        <paper-listbox class="dropdown-content" id="menu">
+          <paper-item>1990</paper-item>
+          <paper-item>1995</paper-item>
+          <paper-item>2000</paper-item>
+          <paper-item>2005</paper-item>
+          <paper-item>2010</paper-item>
+          <paper-item>2015</paper-item>
+        </paper-listbox>
+      </paper-dropdown-menu>
       <!-- Pie chart for ratio of Producers to Services -->
       <google-chart
         type='pie'
-        options='{"title": "Distribution of days in 2001Q1"}'
+        options='{"title": "Shops by type"}'
         cols="[[getColumns(data)]]"
         rows="[[getRows(data)]]">
       </google-chart>
@@ -49,11 +65,17 @@
 
     <script>
       var viz = document.querySelector("#viz");
+      /**
+      * getColumns Simpy returns the column headers
+      */
       viz.getColumns = function(data){
         // console.log(data);
         return [
           {"label":"Business Type","type":"string"},
           {"label":"Types","type":"number"}];};
+      /**
+      * getRows returns the sumber of shops that are Producers/Services
+      */
       viz.getRows = function(data){
         // console.log(data);
         return [
@@ -62,6 +84,24 @@
           ["Productions",
             data.features.filter(f => (f.properties.prod === "VERO")).length]];
       };
+      /**
+      * getUrl returns a link to the right data source based on the year selector
+      */
+      viz.getUrl = function(year){
+        return year ? "/data/attivita_"+year+".geojson" : "/data/attivita_1990.geojson";
+      };
+
+      window.addEventListener('WebComponentsReady', function(e) {
+        var menu = document.querySelector('#menu');
+        var ajax = document.querySelector('#ajax');
+        menu.addEventListener('iron-select', function(ev){
+          year = ev.target.selectedItem.innerHTML.replace(/ /g,'');
+          console.log(year);
+          ajax.url = viz.getUrl(year);
+          ajax.generateRequest();
+        });
+      });
+
     </script>
   </body>
 </html>
