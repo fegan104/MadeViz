@@ -17,7 +17,6 @@
     <link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
     <link rel="import" href="/bower_components/google-chart/google-chart.html">
     <link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-    <link rel="import" href="/bower_components/paper-menu/paper-menu.html">
     <link rel="import" href="/bower_components/paper-listbox/paper-listbox.html">
     <link rel="import" href="/bower_components/paper-item/paper-item.html">
 
@@ -29,10 +28,9 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-ajax/2.1.0/leaflet.ajax.min.js"></script>
 
     <!-- Materialize -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css"> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script> -->
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
-          
 
     <style>
       #names-container {
@@ -51,44 +49,38 @@
         last-response={{data}}>
       </iron-ajax>
 
-      <!-- Year selector -->
-      <paper-dropdown-menu label="Select a year">
-        <paper-listbox class="dropdown-content" id="menu">
-          <paper-item>1990</paper-item>
-          <paper-item>1995</paper-item>
-          <paper-item>2000</paper-item>
-          <paper-item>2005</paper-item>
-          <paper-item>2010</paper-item>
-          <paper-item>2015</paper-item>
-        </paper-listbox>
-      </paper-dropdown-menu>
-
-      <div class="row">
-        <div class="col s9" id='map' style="width: 66%; height: 600px;"></div>
-        <div class="col s3">
-          <div style="width: 133%; height: 300px;">
-            <!-- Pie chart for ratio of Producers to Services -->
-            <google-chart
-              type='pie'
-              options='{"title": "Shops by type"}'
-              cols="[[getColumns(data)]]"
-              rows="[[getRows(data)]]">
-            </google-chart>
-          </div>
-          <div style="width: 33%; height: 300px;">
-            <!-- Display using data binding -->
-            <div style='overflow-y:auto; width:300px; height:300px;'>
-              <template is="dom-repeat" items="{{data.features}}">
-                <div id="names-container">
-                  <p>
-                    [[item.properties.nome]]
-                  </p>
-                </div>
-              </template>
+      <div style="float: right;">
+        <!-- Year selector -->
+        <paper-dropdown-menu label="Select a year">
+          <paper-listbox class="dropdown-content" id="menu">
+            <paper-item>1990</paper-item>
+            <paper-item>1995</paper-item>
+            <paper-item>2000</paper-item>
+            <paper-item>2005</paper-item>
+            <paper-item>2010</paper-item>
+            <paper-item>2015</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+        <!-- Pie chart for ratio of Producers to Services -->
+        <google-chart
+          type='pie'
+          options='{"title": "Shops by type"}'
+          cols="[[getColumns(data)]]"
+          rows="[[getRows(data)]]">
+        </google-chart>
+        <div style="max-height: 33vh; overflow: auto;">
+          <!-- Business Names -->
+          <template is="dom-repeat" items="{{data.features}}">
+            <div id="names-container">
+              <p>
+                [[item.properties.nome]]
+              </p>
             </div>
-          </div>
+          </template>
         </div>
       </div>
+      <!-- Leaflett mapp -->
+      <div class="col s9" id='map' style="width: 66%; height: 600px;"></div>
     </template>
 
     <script>
