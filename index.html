@@ -11,6 +11,7 @@
     <link rel="manifest" href="/manifest.json">
     <!-- Load scripts -->
     <script src="/bower_components/webcomponentsjs/webcomponents.js"></script>
+
     <!-- Polymer imports-->
     <link rel="import" href="/bower_components/polymer/polymer.html">
     <link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
@@ -19,6 +20,19 @@
     <link rel="import" href="/bower_components/paper-menu/paper-menu.html">
     <link rel="import" href="/bower_components/paper-listbox/paper-listbox.html">
     <link rel="import" href="/bower_components/paper-item/paper-item.html">
+
+    <!-- Needed for Leaflet -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.1/leaflet.css" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.1/leaflet.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-ajax/2.1.0/leaflet.ajax.min.js"></script>
+
+    <!-- Materialize -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
+          
 
     <style>
       #names-container {
@@ -36,6 +50,7 @@
         handle-as="json"
         last-response={{data}}>
       </iron-ajax>
+
       <!-- Year selector -->
       <paper-dropdown-menu label="Select a year">
         <paper-listbox class="dropdown-content" id="menu">
@@ -47,26 +62,86 @@
           <paper-item>2015</paper-item>
         </paper-listbox>
       </paper-dropdown-menu>
-      <!-- Pie chart for ratio of Producers to Services -->
-      <google-chart
-        type='pie'
-        options='{"title": "Shops by type"}'
-        cols="[[getColumns(data)]]"
-        rows="[[getRows(data)]]">
-      </google-chart>
-      <!-- Display using data bindinig -->
-      <template is="dom-repeat" items="{{data.features}}">
-        <div id="names-container">
-          [[item.properties.nome]]
-        </p>
+
+      <div class="row">
+        <div class="col s9" id='map' style="width: 66%; height: 600px;"></div>
+        <div class="col s3">
+          <div style="width: 133%; height: 300px;">
+            <!-- Pie chart for ratio of Producers to Services -->
+            <google-chart
+              type='pie'
+              options='{"title": "Shops by type"}'
+              cols="[[getColumns(data)]]"
+              rows="[[getRows(data)]]">
+            </google-chart>
+          </div>
+          <div style="width: 33%; height: 300px;">
+            <!-- Display using data binding -->
+            <div style='overflow-y:auto; width:300px; height:300px;'>
+              <template is="dom-repeat" items="{{data.features}}">
+                <div id="names-container">
+                  <p>
+                    [[item.properties.nome]]
+                  </p>
+                </div>
+              </template>
+            </div>
+          </div>
         </div>
-      </template>
+      </div>
     </template>
 
     <script>
       var viz = document.querySelector("#viz");
+      var my_geojson = '/data/attivita_1990.geojson';
+      var geojsonLayer;
+      var mymap;
+
+      $('document').ready(function(){
+        mymap = L.map('map').setView([45.438096, 12.330628], 14);
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(mymap);
+
+        // initialize map layer to 1990
+        geojsonLayer = L.geoJSON.ajax(my_geojson, {
+          style: function(feature) {
+            return { color: 'green'};
+          },
+          pointToLayer: function(feature, latlng) {
+            return new L.CircleMarker(latlng, {radius: 5, fillOpacity: 0.5});
+          },
+          onEachFeature: function(feature, layer) {
+            layer.bindPopup(feature.properties.replaceThis);
+          }
+        });
+        geojsonLayer.addTo(mymap);
+      });
+
       /**
-      * getColumns Simpy returns the column headers
+      * toggleJSON
+      */
+      function toggleJSON(year) {
+        console.log("togglejson");
+        var oldGeojsonLayer = geojsonLayer;
+        mymap.removeLayer(oldGeojsonLayer);
+        my_geojson = year ? "/data/attivita_"+year+".geojson" : "/data/attivita_1990.geojson";
+        geojsonLayer = L.geoJSON.ajax(my_geojson, {
+          style: function(feature) {
+            return { color: 'green'};
+          },
+          pointToLayer: function(feature, latlng) {
+            return new L.CircleMarker(latlng, {radius: 5, fillOpacity: 0.5});
+          },
+          onEachFeature: function(feature, layer) {
+            layer.bindPopup(feature.properties.replaceThis);
+          }
+        });
+        geojsonLayer.addTo(mymap);
+      };
+
+      /**
+      * getColumns Simply returns the column headers
       */
       viz.getColumns = function(data){
         // console.log(data);
@@ -88,7 +163,8 @@
       * getUrl returns a link to the right data source based on the year selector
       */
       viz.getUrl = function(year){
-        return year ? "/data/attivita_"+year+".geojson" : "/data/attivita_1990.geojson";
+        my_geojson = year ? "/data/attivita_"+year+".geojson" : "/data/attivita_1990.geojson";
+        return my_geojson;
       };
 
       window.addEventListener('WebComponentsReady', function(e) {
@@ -99,6 +175,7 @@
           console.log(year);
           ajax.url = viz.getUrl(year);
           ajax.generateRequest();
+          toggleJSON(year);
         });
       });
 
